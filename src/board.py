@@ -1,5 +1,5 @@
-from const import *
-from square import Square
+from src.const import *
+from src.square import Square
 
 class Board:
 
