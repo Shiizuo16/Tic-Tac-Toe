@@ -1,10 +1,12 @@
 from src.const import *
+# from const import *
 
 class Square:
 
-    def __init__(self, row, col, texture=None, textureRect=None):
-        self.piece = -1
+    def __init__(self, row, col):
+        self.piece = -1 # (0-->O, 1-->X)
         self.row = row
         self.col = col
-        self.texture = texture
-        self.textureRect = textureRect
+        self.texture = None
+        self.textureRect = None
+        self.img = None
