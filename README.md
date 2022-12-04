@@ -1,5 +1,5 @@
 # TIC-TAC-TOE
 
-Made by:- 
-Arjun Singh XII-D
-Yash Verma XII-E
+## Made by:- 
+Score System --> Arjun Singh XII-D
+Base Game --> Yash Verma XII-E
