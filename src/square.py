@@ -1,5 +1,4 @@
 from src.const import *
-# from const import *
 
 class Square:
 

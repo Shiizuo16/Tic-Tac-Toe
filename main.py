@@ -27,6 +27,8 @@ class Main:
                 self.game.showPieces()
             self.game.showMenu()
             self.game.showButtons()
+
+            
                 
 
             for event in pygame.event.get():
@@ -54,19 +56,34 @@ class Main:
                 elif event.type == pygame.MOUSEBUTTONUP:
                     button = mouse.button
 
-                    if clickedRow<3 and self.showing == 1:
-                        print(clickedRow, clickedCol)
+                    if clickedRow<3 and self.showing == 1 and not self.game.won and not self.game.draw:
                         self.game.squareClicked(clickedRow, clickedCol)
-                    else:
+                        self.game.board.showGrid()
+                        print()
 
+                        # Checking Draw
+                        if self.game.board.calcDraw():
+                            print('game draw')
+                            self.game.draw = True
+                        
+                        # Checking for win
+                        won,num =  self.game.board.calcWin()
+                        if won:
+                            print('game won', num)
+                            self.game.won = True
+
+                    else:
+                        # Menu Button
                         if mouse.button == 'menu':
                             self.showing = 0 if self.showing==1 else 1
                             self.game.changePlayPause(self.showing)
 
+                        # Reset button
                         elif mouse.button == 'reset':
                             self.game.board.clear()
                             self.showing = 0
                             self.game.buttons[0].setButton("assets\\buttons-48px\play.png")
+                            self.game.won = self.game.draw = False
 
                         mouse.button = None
 

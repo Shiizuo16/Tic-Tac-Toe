@@ -9,6 +9,8 @@ from src.mouse import Mouse
 class Game:
 
     def __init__(self, screen):
+        self.draw = False
+        self.won = False
         self.screen = screen
         self.buttons = buttons
         self.mouse = Mouse()
