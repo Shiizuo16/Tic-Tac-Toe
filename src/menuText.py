@@ -11,8 +11,13 @@ colors = dict(white = (255, 255, 255),
 
 class Text:
 
-    def __init__(self, text, xcor, ycor):
-        pass
+    def __init__(self, text, xcor=0, ycor=0, size=50, color=colors.get('white'), font="assets\\fonts\\Fontspring-DEMO-grotesco-bold.otf"):
+        self.font = pygame.font.Font(font, size)
+        self.text = self.font.render(text, True, color)
+        self.textRect = self.text.get_rect(center=(xcor, ycor))
+
+    def show(self, surface):
+        surface.blit(self.text, self.textRect)
     
 # X = 300
 # Y = 300

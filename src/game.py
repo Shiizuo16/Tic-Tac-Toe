@@ -5,7 +5,7 @@ from src.board import Board
 from src.buttons import *
 from src.mouse import Mouse
 from src.line import Line
-
+from src.menuText import *
 
 class Game:
 
@@ -18,6 +18,17 @@ class Game:
         self.board = Board()
         self.turn = 0 # (0-->O, 1-->X)
         self.line = Line()
+        self.text = Text('Turn : ', length//2-side//2, length+(menuHeight//2))
+        
+        # Bottom Menu turn image
+        self.image = pygame.image.load("assets\\buttons-48px\\dot.png")
+        self.center = length//2+side, length+(menuHeight//2)
+        self.textureRect = self.image.get_rect(center=self.center)
+
+        # winner
+        self.winner = Text('Winner : ', length//2-side*0.75, length+(menuHeight//2))
+        
+
 
     def changePlayPause(self, n):
         if n == 0:
@@ -64,3 +75,21 @@ class Game:
                 sq = self.board.squares[row][col]
                 if sq.piece != -1:
                     self.screen.blit(sq.img, sq.textureRect)
+    
+    def showText(self):
+        self.text.show(self.screen)
+        self.showImage()
+
+    def turnImage(self):
+        if self.turn == 0:
+           self.image = pygame.image.load("assets\\buttons-48px\\dot.png")
+        else:
+            self.image = pygame.image.load("assets\\buttons-48px\\cross.png")
+
+    def showImage(self):
+        self.screen.blit(self.image, self.textureRect)
+
+    def showWinner(self):
+        self.winner.show(self.screen)
+        self.showImage()
+

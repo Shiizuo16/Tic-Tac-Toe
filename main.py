@@ -27,15 +27,21 @@ class Main:
                 self.game.showSquares()
                 self.game.showPieces()
 
-                # Win line
-                if self.game.won:
-                    self.game.line.showLine(self.screen)
+                
+
+
 
             
 
             # Bottom menu
             self.game.showMenu()
             self.game.showButtons()
+            if self.showing == 1 and not(self.game.won or self.game.draw):
+                self.game.showText()
+            elif self.game.won:
+                    if self.showing == 1:
+                        self.game.line.showLine(self.screen)
+                    self.game.showWinner()
 
             
                 
@@ -67,21 +73,29 @@ class Main:
 
                     if clickedRow<3 and self.showing == 1 and not self.game.won and not self.game.draw:
                         self.game.squareClicked(clickedRow, clickedCol)
+                        self.game.turnImage()
                         self.game.board.showGrid()
                         print()
 
-                        # Checking Draw
-                        if self.game.board.calcDraw():
-                            print('game draw')
-                            self.game.draw = True
-                        
-                        # Checking for win
-                        won,num,line =  self.game.board.calcWin()
-                        if won:
-                            print('game won', num, line)
-                            self.game.won = True
-                            self.game.line.dir = line
-                            self.game.line.setLine()
+                        if not(self.game.won or self.game.draw):
+                            # Checking Draw
+                            if self.game.board.calcDraw():
+                                print('game draw')
+                                self.game.draw = True
+                                self.showing = 0
+                            
+                            # Checking for win
+                            won,num,line =  self.game.board.calcWin()
+                            if won:
+                                print('game won', num, line)
+                                self.game.won = True
+                                self.game.line.dir = line
+                                self.game.line.setLine()
+                                self.game.num = num
+                                side = self.game.buttons[0].length
+                                self.game.center = length//2+side*1.5, length+(menuHeight//2)
+                                self.game.textureRect = self.game.image.get_rect(center=self.game.center)
+                                self.game.buttons[0].setButton("assets\\buttons-48px\\next.png")
 
                     else:
                         # Menu Button
