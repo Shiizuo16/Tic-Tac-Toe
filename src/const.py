@@ -1,5 +1,5 @@
 # screen
-length = 300
+length = 300 + 1    # to accomodate center alignment of squares
 height = length + 50
 
 # menu
@@ -10,4 +10,5 @@ menuHeight = height - length
 boardLength = boardHeight = length
 rows = 3
 cols = 3
-sqSize = length//cols
+rectSize = length//cols
+sqSize = rectSize - 1

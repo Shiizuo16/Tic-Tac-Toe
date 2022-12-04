@@ -2,20 +2,23 @@ import pygame
 import sys
 
 from src.const import *
+from src.game import Game
 
 
 class Main:
 
     def __init__(self):
         pygame.init()
-
+        
+    
         # Game Screen
         self.screen = pygame.display.set_mode((length, height))
-    
-    def mainloop(self):
-        screen = self.screen
+        self.game = Game(self.screen)
 
+        
+    def mainloop(self):
         while True:
+            self.game.showBackground()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
