@@ -39,11 +39,16 @@ class Main:
                     clickedRow = mouse.y // sqSize
                     clickedCol = mouse.x // sqSize
 
-                    # Play/Pause clicked
-                    if clickedRow == 3:
+                    # Button clicked
+                    if clickedRow == 3: 
+                        # Play/Pause
                         if mouse.x > self.game.buttons[0].X and mouse.x < self.game.buttons[0].Y:
                             mouse.button = 'menu'
                             print('menu clicked')
+                        # Reset
+                        elif mouse.x < self.game.buttons[0].length and mouse.x < self.game.buttons[0].Y:
+                            mouse.button = 'reset'
+                            print('reset clicked')
                 
                  # Mouse Button released
                 elif event.type == pygame.MOUSEBUTTONUP:
@@ -57,8 +62,13 @@ class Main:
                         if mouse.button == 'menu':
                             self.showing = 0 if self.showing==1 else 1
                             self.game.changePlayPause(self.showing)
-                            mouse.button = None
 
+                        elif mouse.button == 'reset':
+                            self.game.board.clear()
+                            self.showing = 0
+                            self.game.buttons[0].setButton("assets\\buttons-48px\play.png")
+
+                        mouse.button = None
 
                 elif event.type == pygame.QUIT:
                     pygame.quit()

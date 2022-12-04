@@ -1,5 +1,5 @@
 # screen
-length = 300 + 1    # to accomodate center alignment of squares
+length = 600 + 1    # to accomodate center alignment of squares
 height = length + 70
 
 # menu

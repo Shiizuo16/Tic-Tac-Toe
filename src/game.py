@@ -20,15 +20,15 @@ class Game:
             self.buttons[0].setButton("assets\\buttons-48px\play.png")
         else:
             self.buttons[0].setButton("assets\\buttons-48px\pause.png")
-
+    
     def squareClicked(self, row, col):
         if self.board.squares[row][col].piece == -1: # doesn't have a piece
             self.board.squares[row][col].piece = self.turn
             if self.turn == 0:
-                t = self.board.squares[row][col].texture = "assets\\buttons-64\\dot.png"
+                t = self.board.squares[row][col].texture = "assets\\buttons-128px\\dot.png"
                 self.turn = 1
             else:
-                t = self.board.squares[row][col].texture = "assets\\buttons-64\\cross.png"
+                t = self.board.squares[row][col].texture = "assets\\buttons-128px\\cross.png"
                 self.turn = 0
             self.board.squares[row][col].img = pygame.image.load(t)
             center = col*rectSize + (rectSize)//2, row*rectSize + (rectSize)//2

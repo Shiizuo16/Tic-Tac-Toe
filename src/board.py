@@ -13,3 +13,6 @@ class Board:
         for row in range(rows):
             for col in range(cols):
                 self.squares[row][col] = Square(row,col)
+
+    def clear(self):
+        self.createBoard()
