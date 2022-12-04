@@ -44,20 +44,20 @@ class Board:
         
         #diagonals
         if lst[0][0] == lst[1][1] == lst[2][2] and lst[1][1] != '-1':
-            return True, lst[1][1]
+            return True, lst[1][1], 'left'
         elif lst[2][0] == lst[1][1] == lst[0][2] and lst[1][1] != '-1':
-            return True, lst[1][1]
+            return True, lst[1][1], 'right'
         
         # row-wise
         for row in range(rows):
             if lst[row][0] == lst[row][1] == lst[row][2]and lst[row][1] != '-1':
-                return True, lst[row][1]
+                return True, lst[row][1], 'h'+str(row)
         # col-wise
         for col in range(cols):
             if lst[0][col] == lst[1][col] == lst[2][col]and lst[1][col] != '-1':
-                return True, lst[1][col]
+                return True, lst[1][col], 'v'+str(col)
 
-        return False, -1
+        return False, -1, None
 
 
     # Show methods

@@ -22,9 +22,18 @@ class Main:
         while True:
             if self.showing == 0:
                 self.game.showMenuScreen()
+                
             else:
                 self.game.showSquares()
                 self.game.showPieces()
+
+                # Win line
+                if self.game.won:
+                    self.game.line.showLine(self.screen)
+
+            
+
+            # Bottom menu
             self.game.showMenu()
             self.game.showButtons()
 
@@ -67,10 +76,12 @@ class Main:
                             self.game.draw = True
                         
                         # Checking for win
-                        won,num =  self.game.board.calcWin()
+                        won,num,line =  self.game.board.calcWin()
                         if won:
-                            print('game won', num)
+                            print('game won', num, line)
                             self.game.won = True
+                            self.game.line.dir = line
+                            self.game.line.setLine()
 
                     else:
                         # Menu Button

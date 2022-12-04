@@ -4,6 +4,7 @@ from src.const import *
 from src.board import Board
 from src.buttons import *
 from src.mouse import Mouse
+from src.line import Line
 
 
 class Game:
@@ -16,6 +17,7 @@ class Game:
         self.mouse = Mouse()
         self.board = Board()
         self.turn = 0 # (0-->O, 1-->X)
+        self.line = Line()
 
     def changePlayPause(self, n):
         if n == 0:
@@ -54,7 +56,6 @@ class Game:
 
     def showButtons(self):
         for button in self.buttons:
-            # pygame.draw.rect(self.screen, button.color, button.rect)
             button.blitButton(self.screen)
 
     def showPieces(self):
@@ -63,7 +64,3 @@ class Game:
                 sq = self.board.squares[row][col]
                 if sq.piece != -1:
                     self.screen.blit(sq.img, sq.textureRect)
-
-
-
-
