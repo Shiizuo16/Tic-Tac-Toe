@@ -1,5 +1,5 @@
 # TIC-TAC-TOE
 
 ## Made by:- 
-Score System --> Arjun Singh XII-D       
-Base Game --> Yash Verma XII-E
+Game (mostly) --> Yash Verma XII-E        
+Debugging and Score System --> Arjun Singh XII-D       
