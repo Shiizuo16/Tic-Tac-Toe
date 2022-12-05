@@ -16,12 +16,14 @@ class Main:
         self.screen = pygame.display.set_mode((length, height))
         self.game = Game(self.screen)
 
+
         
     def mainloop(self):
         mouse = self.game.mouse
         while True:
             if self.showing == 0:
                 self.game.showMenuScreen()
+                self.game.menu.showBoxes()
                 
             else:
                 self.game.showSquares()
@@ -52,12 +54,16 @@ class Main:
                     # Updating mouse position
                     mouse.update(event.pos)
 
+                    # Clicked Input box
+                    if not self.game.menu.active:
+                        self.game.inputBoxClicked(event.pos)
+                    
                     # Clicked row/col
                     clickedRow = mouse.y // sqSize
                     clickedCol = mouse.x // sqSize
 
                     # Button clicked
-                    if clickedRow == 3: 
+                    if clickedRow == 3 and not self.game.menu.active: 
                         # Play/Pause
                         if mouse.x > self.game.buttons[0].X and mouse.x < self.game.buttons[0].Y:
                             mouse.button = 'menu'
@@ -111,6 +117,18 @@ class Main:
                             self.game.won = self.game.draw = False
 
                         mouse.button = None
+                elif event.type == pygame.KEYDOWN:
+                    if self.game.menu.active:
+                        if event.key == pygame.K_RETURN:
+                            self.game.inactivateBox()
+                        elif event.key == pygame.K_BACKSPACE:
+                            self.game.delText()
+                        elif event.key == pygame.K_LEFT:
+                            pass
+                        elif event.key == pygame.K_RIGHT:   
+                            pass
+                        else:
+                            self.game.writeText(event.unicode)
 
                 elif event.type == pygame.QUIT:
                     pygame.quit()

@@ -6,6 +6,8 @@ from src.buttons import *
 from src.mouse import Mouse
 from src.line import Line
 from src.menuText import *
+from src.score import Scores
+from src.menuScreen import Menu
 
 class Game:
 
@@ -18,6 +20,10 @@ class Game:
         self.board = Board()
         self.turn = 0 # (0-->O, 1-->X)
         self.line = Line()
+        self.menu = Menu(screen)
+
+
+        # player turn
         self.text = Text('Turn : ', length//2-side//2, length+(menuHeight//2))
         
         # Bottom Menu turn image
@@ -28,7 +34,11 @@ class Game:
         # winner
         self.winner = Text('Winner : ', length//2-side*0.75, length+(menuHeight//2))
         
+        # players
+        self.players = dict()
 
+        # scores
+        self.scores = Scores()
 
     def changePlayPause(self, n):
         if n == 0:
@@ -48,7 +58,59 @@ class Game:
             self.board.squares[row][col].img = pygame.image.load(t)
             center = col*rectSize + (rectSize)//2, row*rectSize + (rectSize)//2
             self.board.squares[row][col].textureRect = self.board.squares[row][col].img.get_rect(center=center)
+    def turnImage(self):
+        if self.turn == 0:
+           self.image = pygame.image.load("assets\\buttons-48px\\dot.png")
+        else:
+            self.image = pygame.image.load("assets\\buttons-48px\\cross.png")
 
+    def inputBoxClicked(self, pos):
+        for box in self.menu.boxes:
+            if box.rectangle.collidepoint(pos):
+                box.active = True
+                box.color = box.color_active
+                self.menu.active = True
+                self.menu.activeBox = box
+                break                        
+            box.color = False
+            
+    def inactivateBox(self):
+        box = self.menu.activeBox
+        box.color = box.color_inactive
+        box.active = False
+        box.done = True
+        self.menu.active = False
+        self.menu.activeBox = None
+
+    def writeText(self, char):
+        box = self.menu.activeBox
+        box.text += char
+        l= box.font.size(box.renderText)[0]
+        while l>box.length-side:
+            box.renderText = box.renderText[1:]
+            l = box.font.size(box.renderText)[0]
+
+        box.renderText += char
+        print()
+        print('rtext-->',box.renderText,'  text-->', box.text)
+
+
+    def delText(self):
+        box = self.menu.activeBox
+
+        text_l = box.font.size(box.text)[0]
+        if text_l>box.length-side:
+            index = box.text.index(box.renderText)
+            box.renderText = box.text[index-1] + box.renderText[:-1]
+        else:
+            box.renderText = box.text
+        box.text = box.text[:-1]
+        print()
+        print('rtext-->',box.renderText,'  text-->', box.text)
+
+
+
+    
     # Show Methods
     def showSquares(self):
         for row in range(rows):
@@ -79,12 +141,6 @@ class Game:
     def showText(self):
         self.text.show(self.screen)
         self.showImage()
-
-    def turnImage(self):
-        if self.turn == 0:
-           self.image = pygame.image.load("assets\\buttons-48px\\dot.png")
-        else:
-            self.image = pygame.image.load("assets\\buttons-48px\\cross.png")
 
     def showImage(self):
         self.screen.blit(self.image, self.textureRect)
