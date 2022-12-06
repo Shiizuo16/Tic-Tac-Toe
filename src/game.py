@@ -20,14 +20,23 @@ class Game:
         self.buttons = buttons
         self.mouse = Mouse()
         self.board = Board()
-        self.turn = randint(0, 1) # (0-->O, 1-->X)
         self.line = Line()
         self.menu = Menu(screen)
         self.boxesDone = False
         self.scores = Scores()
 
+        # players
+        self.players = dict()
 
+        # scores
+        self.scores = Scores()
+
+        self.initializeGame()
+
+
+    def initializeGame(self):
         # player turn
+        self.turn = randint(0, 1) # (0-->O, 1-->X)
         self.text = Text('Turn : ', length//2-side//2, length+(menuHeight//2))
         
         # Bottom Menu turn image
@@ -40,12 +49,6 @@ class Game:
         
         # Draw text
         self.draw_text = Text('DRAW', length//2, length+(menuHeight//2))
-
-        # players
-        self.players = dict()
-
-        # scores
-        self.scores = Scores()
 
     def writePlayerNames(self):
         # Getting player names
@@ -65,11 +68,6 @@ class Game:
                 break
         else:
             self.boxesDone = True
-
-    def resetBoxes(self):
-        for box in self.menu.boxes:
-            self.boxesDone = False
-        self.boxesDone = False
 
 
     def changePlayPause(self, n):
@@ -101,14 +99,34 @@ class Game:
     def inputBoxClicked(self, pos):
         for box in self.menu.boxes:
             if box.rectangle.collidepoint(pos):
-                box.active = True
-                box.color = box.color_active
-                self.menu.active = True
-                self.menu.activeBox = box
-                break                        
-            box.color = False
-            
-    def inactivateBox(self):
+                self.activateBox(box)
+            else:
+                self.inactivateBox(box)
+
+    def activateBox(self, box):
+        box.active = True
+        box.color = box.color_active
+
+        self.menu.active = True
+        self.menu.activeBox = box
+                
+    
+    def inactivateBox(self, box):
+        if box.text != '':
+            box.active = False
+            box.color = box.color_inactive
+            box.done = True
+
+            self.menu.active = False
+            self.menu.activeBox = None
+
+    def checkText(self):
+        text = self.menu.activeBox.text
+        if text != "":
+            self.menu.active = False
+        
+
+    def nextBox(self):
         box = self.menu.activeBox
         index = self.menu.boxes.index(box)
         try:
@@ -162,7 +180,12 @@ class Game:
             otherPlayer = self.menu.p2.text
         print('winner-->',winner)
         self.scores.registerWin(winner, otherPlayer)
-        self.printScores()
+        # self.printScores()
+
+    def setWinner(self):
+        self.center = length//2+side*1.5, length+(menuHeight//2)
+        self.textureRect = self.image.get_rect(center=self.center)
+        self.turnImage()
 
     
     # Show Methods
@@ -181,6 +204,7 @@ class Game:
             for i in entry.split():
                 print(i.capitalize(), end='\t')
             print()
+        print()
 
     def showSquares(self):
         for row in range(rows):

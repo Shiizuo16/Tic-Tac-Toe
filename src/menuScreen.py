@@ -50,9 +50,10 @@ class Menu():
 
         self.images.extend([dot_tup, cross_tup])
 
-        
-
-
+    def reset(self):
+        pass
+    
+    # Show methods
     def showMenuStuff(self):
         for text in self.texts:
             text.show(self.screen)

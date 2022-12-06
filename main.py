@@ -55,8 +55,10 @@ class Main:
      
 
             for event in pygame.event.get():
+
                 # Mouse button clicked
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # print('mouse down')
                     # Updating mouse position
                     mouse.update(event.pos)
 
@@ -67,13 +69,19 @@ class Main:
                     # Clicked row/col
                     clickedRow = mouse.y // sqSize
                     clickedCol = mouse.x // sqSize
+                    print(clickedRow, clickedCol)
 
                     # Button clicked
-                    if clickedRow == 3 and not self.game.menu.active: 
+                    if clickedRow == 3 and not self.game.menu.active:
+                        print('clicked bottom bar') 
                         # Play/Pause
                         if mouse.x > self.game.buttons[0].X and mouse.x < self.game.buttons[0].Y:
-                            mouse.button = 'menu'
-                            print('menu clicked')
+                            if not self.game.won:
+                                mouse.button = 'menu'
+                                print('menu clicked')
+                            else:
+                                mouse.button = 'next'
+                                print('next clicked')
                         # Reset
                         elif mouse.x < self.game.buttons[0].length and mouse.x < self.game.buttons[0].Y:
                             mouse.button = 'restart'
@@ -89,34 +97,38 @@ class Main:
                         # self.game.board.showGrid()
                         # print()
 
-                        if not(self.game.won or self.game.draw):
+                        if not(self.game.won or self.game.draw): # game still running
                             # Checking for win
                             won,num,line =  self.game.board.calcWin()
                             if won:
                                 print('game won', num, line)
                                 self.game.won = True
+                                # red line
                                 self.game.line.dir = line
                                 self.game.line.setLine()
-                                self.game.num = num
+                                
+                                # next button
                                 side = self.game.buttons[0].length
-                                self.game.center = length//2+side*1.5, length+(menuHeight//2)
-                                self.game.textureRect = self.game.image.get_rect(center=self.game.center)
                                 self.game.buttons[0].setButton("assets\\buttons-48px\\next.png")
 
+                                # winner num
+                                self.game.num = num
                                 self.game.turn = int(num)
-                                self.game.turnImage()
+                                self.game.setWinner()
+                                
                             
                             # Checking Draw
                             elif self.game.board.calcDraw():
                                 print('game draw')
                                 self.game.draw = True
                                 self.showing = 0
-                                self.game.buttons[0].setButton("assets\\buttons-48px\play.png")
+                                # self.game.menu = True
+                                self.game.changePlayPause(0)
 
                             
             
 
-
+                    # Menu Screen
                     elif clickedRow<3 and self.showing == 0 and not self.game.won and not self.game.draw:
                         button = self.game.menu.buttons[0]
                         button2 = self.game.menu.buttons[1]
@@ -139,17 +151,24 @@ class Main:
                                     box.active = False
                                     box.done = False
                                 self.game.boxesDone = False
+
+                    # Next Button
+                    elif mouse.button == 'next':
+                        self.game.changePlayPause(0)
+                        # Saveing score
+                        self.game.saveScore()
+                        # Reseting box and boxes
+                        self.game.board.clear()
+                        # Menu; reseting flag variables
+                        self.showing = 0
+                        self.game.won = self.game.draw = False
+                        # Reseting game
+                        self.game.initializeGame()
+
                     else:
                         # Menu Button
                         if mouse.button == 'menu':
-                            if self.game.won:
-                                self.game.saveScore()
-                                self.game.board.clear()
-                                self.showing = 0
-                                self.game.buttons[0].setButton("assets\\buttons-48px\play.png")
-                                self.game.won = self.game.draw = False
-                                self.game.resetBoxes()
-                            elif self.game.boxesDone:
+                            if self.game.boxesDone:
                                 self.showing = 0 if self.showing==1 else 1
                                 self.game.changePlayPause(self.showing)
                             
@@ -159,16 +178,16 @@ class Main:
                         elif mouse.button == 'restart':
                             self.game.board.clear()
                             self.showing = 0
-                            self.game.buttons[0].setButton("assets\\buttons-48px\play.png")
-                            self.game.won = self.game.draw = False
-                            self.game.resetBoxes()
+                            self.game.menu.active = True
+                            self.game.changePlayPause(0)
                         mouse.button = None
 
 
                 elif event.type == pygame.KEYDOWN:
                     if self.game.menu.active:
                         if event.key == pygame.K_RETURN:
-                            self.game.inactivateBox()
+                            # self.game.nextBox()
+                            self.game.inactivateBox(self.game.menu.activeBox)
                             if mouse.button == 'menu':
                                 if self.game.boxesDone:
                                     self.showing = 0 if self.showing==1 else 1
