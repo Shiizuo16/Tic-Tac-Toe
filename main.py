@@ -76,7 +76,7 @@ class Main:
                         print('clicked bottom bar') 
                         # Play/Pause
                         if mouse.x > self.game.buttons[0].X and mouse.x < self.game.buttons[0].Y:
-                            if not self.game.won:
+                            if not (self.game.won or self.game.draw):
                                 mouse.button = 'menu'
                                 print('menu clicked')
                             else:
@@ -121,9 +121,17 @@ class Main:
                             elif self.game.board.calcDraw():
                                 print('game draw')
                                 self.game.draw = True
+
+                                # next button
+                                side = self.game.buttons[0].length
+                                self.game.buttons[0].setButton("assets\\buttons-48px\\next.png")
+
+                                # winner num
+                                self.game.num = num
+
                                 self.showing = 0
-                                # self.game.menu = True
                                 self.game.changePlayPause(0)
+                                
 
                             
             
@@ -154,16 +162,25 @@ class Main:
 
                     # Next Button
                     elif mouse.button == 'next':
-                        self.game.changePlayPause(0)
-                        # Saveing score
-                        self.game.saveScore()
-                        # Reseting box and boxes
-                        self.game.board.clear()
-                        # Menu; reseting flag variables
-                        self.showing = 0
-                        self.game.won = self.game.draw = False
-                        # Reseting game
-                        self.game.initializeGame()
+                        if self.game.won:
+                            self.game.changePlayPause(0)
+                            # Saveing score
+                            self.game.saveScore()
+                            # Reseting box and boxes
+                            self.game.board.clear()
+                            # Menu; reseting flag variables
+                            self.showing = 0
+                            self.game.won = self.game.draw = False
+                            # Reseting game
+                            self.game.initializeGame()
+                        elif self.game.draw:
+                            self.game.board.clear()
+                            # Menu; reseting flag variables
+                            self.showing = 1
+                            self.game.won = self.game.draw = False
+                            # Reseting game
+                            self.game.initializeGame()
+
 
                     else:
                         # Menu Button
@@ -178,7 +195,6 @@ class Main:
                         elif mouse.button == 'restart':
                             self.game.board.clear()
                             self.showing = 0
-                            self.game.menu.active = True
                             self.game.changePlayPause(0)
                         mouse.button = None
 
@@ -186,8 +202,8 @@ class Main:
                 elif event.type == pygame.KEYDOWN:
                     if self.game.menu.active:
                         if event.key == pygame.K_RETURN:
-                            # self.game.nextBox()
-                            self.game.inactivateBox(self.game.menu.activeBox)
+                            self.game.nextBox()
+                            # self.game.inactivateBox(self.game.menu.activeBox)
                             if mouse.button == 'menu':
                                 if self.game.boxesDone:
                                     self.showing = 0 if self.showing==1 else 1
